@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soccer Livescore</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f2f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .match-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .match-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .match-time {
+            background: #f8f9fa;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 14px;
+            color: #666;
+        }
+        .match-status {
+            color: #e63946;
+            font-weight: bold;
+        }
+        .score-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+        }
+        .team {
+            flex: 1;
+            text-align: center;
+        }
+        .team-name {
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .score {
+            font-size: 2.5em;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+        .score-divider {
+            color: #666;
+        }
+        .events {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        .event {
+            font-size: 14px;
+            color: #666;
+            margin: 5px 0;
+        }
+        .event-goal {
+            color: #2c7a4c;
+        }
+        .connection-status {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            background: #4CAF50;
+            color: white;
+            display: none;
+        }
+        .connection-status.disconnected {
+            background: #f44336;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="connection-status" class="connection-status">Connected</div>
+        <div id="match-container"></div>
+    </div>
+
+    <script>
+        const matchContainer = document.getElementById('match-container');
+        const connectionStatus = document.getElementById('connection-status');
+        let lastEventData = null;
+
+        function showConnectionStatus(connected) {
+            connectionStatus.style.display = 'block';
+            connectionStatus.textContent = connected ? 'Connected' : 'Disconnected';
+            connectionStatus.className = `connection-status ${connected ? '' : 'disconnected'}`;
+        }
+
+        function updateMatch(data) {
+            // Don't update if the data hasn't changed
+            if (lastEventData && JSON.stringify(lastEventData) === JSON.stringify(data)) {
+                return;
+            }
+            lastEventData = data;
+
+            const matchCard = document.createElement('div');
+            matchCard.className = 'match-card';
+
+            matchCard.innerHTML = `
+                <div class="match-header">
+                    <div class="match-time">${data.time}</div>
+                    <div class="match-status">${data.status}</div>
+                </div>
+                <div class="score-container">
+                    <div class="team">
+                        <div class="team-name">${data.home_team}</div>
+                    </div>
+                    <div class="score">
+                        <span>${data.score.home}</span>
+                        <span class="score-divider">-</span>
+                        <span>${data.score.away}</span>
+                    </div>
+                    <div class="team">
+                        <div class="team-name">${data.away_team}</div>
+                    </div>
+                </div>
+                ${data.events && data.events.length > 0 ? `
+                    <div class="events">
+                        ${data.events.map(event => `
+                            <div class="event ${event.type === 'goal' ? 'event-goal' : ''}">
+                                ${event.time} - ⚽ ${event.player} (${event.team === 'home' ? data.home_team : data.away_team})
+                            </div>
+                        `).join('')}
+                    </div>
+                ` : ''}
+            `;
+
+            // Clear previous content and add new match card
+            matchContainer.innerHTML = '';
+            matchContainer.appendChild(matchCard);
+        }
+
+        function connectToSSE() {
+            const eventSource = new EventSource('http://localhost:8000/livescore');
+
+            eventSource.onopen = () => {
+                showConnectionStatus(true);
+            };
+
+            eventSource.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                updateMatch(data);
+            };
+
+            eventSource.onerror = (error) => {
+                showConnectionStatus(false);
+                // Try to reconnect after 5 seconds
+                eventSource.close();
+                setTimeout(connectToSSE, 5000);
+            };
+        }
+
+        // Start the connection
+        connectToSSE();
+    </script>
+</body>
+</html>

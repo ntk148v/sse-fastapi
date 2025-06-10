@@ -1,0 +1,114 @@
+[
+    {
+        "match_id": "2025061001",
+        "home_team": "Manchester United",
+        "away_team": "Liverpool",
+        "score": {
+            "home": 0,
+            "away": 0
+        },
+        "time": "0:00",
+        "status": "First Half",
+        "events": []
+    },
+    {
+        "match_id": "2025061001",
+        "home_team": "Manchester United",
+        "away_team": "Liverpool",
+        "score": {
+            "home": 1,
+            "away": 0
+        },
+        "time": "23:15",
+        "status": "First Half",
+        "events": [
+            {
+                "time": "23:15",
+                "type": "goal",
+                "team": "home",
+                "player": "Marcus Rashford"
+            }
+        ]
+    },
+    {
+        "match_id": "2025061001",
+        "home_team": "Manchester United",
+        "away_team": "Liverpool",
+        "score": {
+            "home": 1,
+            "away": 1
+        },
+        "time": "41:30",
+        "status": "First Half",
+        "events": [
+            {
+                "time": "41:30",
+                "type": "goal",
+                "team": "away",
+                "player": "Mohamed Salah"
+            }
+        ]
+    },
+    {
+        "match_id": "2025061001",
+        "home_team": "Manchester United",
+        "away_team": "Liverpool",
+        "score": {
+            "home": 1,
+            "away": 1
+        },
+        "time": "45:00",
+        "status": "Half Time",
+        "events": []
+    },
+    {
+        "match_id": "2025061001",
+        "home_team": "Manchester United",
+        "away_team": "Liverpool",
+        "score": {
+            "home": 2,
+            "away": 1
+        },
+        "time": "67:20",
+        "status": "Second Half",
+        "events": [
+            {
+                "time": "67:20",
+                "type": "goal",
+                "team": "home",
+                "player": "Bruno Fernandes"
+            }
+        ]
+    },
+    {
+        "match_id": "2025061001",
+        "home_team": "Manchester United",
+        "away_team": "Liverpool",
+        "score": {
+            "home": 2,
+            "away": 2
+        },
+        "time": "89:45",
+        "status": "Second Half",
+        "events": [
+            {
+                "time": "89:45",
+                "type": "goal",
+                "team": "away",
+                "player": "Darwin Nunez"
+            }
+        ]
+    },
+    {
+        "match_id": "2025061001",
+        "home_team": "Manchester United",
+        "away_team": "Liverpool",
+        "score": {
+            "home": 2,
+            "away": 2
+        },
+        "time": "90:00",
+        "status": "Full Time",
+        "events": []
+    }
+]
